@@ -1,8 +1,11 @@
 # Criador         : Brayan vieira 
 # função          : Um sistema de consulta de cnpj 
-# versão          : 1.0
+# versão          : 1.2
 # data da criação : 24/2/2024
+# Notas           : Correção de erros e melhoria de instabilidade
 import requests
+import os
+import platform
 MENU = '''
                 ************************************************
                 *                                              *
@@ -17,15 +20,25 @@ MENU = '''
                                 
                 
 Insira algum cnpj para continuar :  '''
+#--------------------------------------------------------------------------------
+#                               Função limpar a tela 
+def limpador():
+    sistema_operacional = platform.system()
+#--------------------------------------------------------------------------------
+#                       detectando o os para o clear 
+    if sistema_operacional == "Windows":
+        limpador = "cls"
+    elif sistema_operacional == "Linux" or sistema_operacional == "Mac":
+        limpador = "clear"
+    return os.system(limpador)
 #-----------------------------------------------------------------------------------------
 #                               Definindo o cnpj e capturando erros
 try:
+    limpador()
     cnpj = int(input(MENU))
+    limpador()
 except ValueError:
       print("\n \n Erro, você inseriu um caracter invalido \n \n Insira somente numeros \n")
-      exit()
-if cnpj > 14:
-      print(" \n \n Você inseriu um cnpj invalido \n \n tente novamente \n")
       exit()
 #-----------------------------------------------------------------------------------------
 #                                  definindo a api
@@ -67,7 +80,7 @@ for indice, informacoes in dados.items():
 #                   percorrendo e tratando os dados da requisição 
                 print(f"{indice}: {total['text']} \n")
                 with open("Consulta_cnpj.txt", "a", encoding="utf-8") as arquivo:
-                    arquivo.write(f"{indice} : {total["text"]} \n")
+                    arquivo.write(f"{indice} : {total['text']} \n")
 #-----------------------------------------------------------------------------------------
 #                           percorrendo e limpando os dados
     elif indice == "atividades_secundarias":
@@ -76,16 +89,16 @@ for indice, informacoes in dados.items():
 #-----------------------------------------------------------------------------------------
 #                           percorrendo e salvando os dados em um arquivo
                 with open("Consulta_cnpj.txt", "a", encoding="utf-8") as arquivo:
-                    arquivo.write(f"{indice} : {total["text"]} \n")
+                    arquivo.write(f"{indice} : {total['text']} \n")
 #-----------------------------------------------------------------------------------------
 #                               Limpando os dados da requisição
     elif indice == "qsa":
             for total in informacoes:
-                print(f" funcionario : {total["nome"]} \n cargo :  {total['qual']} \n")
+                print(f" funcionario : {total['nome']} \n cargo :  {total['qual']} \n")
 #-----------------------------------------------------------------------------------------
 #                               Salvando os dados em um arquivo
                 with open("Consulta_cnpj.txt", "a", encoding="utf-8") as arquivo:
-                    arquivo.write(f"funcionario : {total["nome"]} \n cargo :  {total["qual"]} \n")
+                    arquivo.write(f"funcionario : {total['nome']} \n cargo :  {total['qual']} \n")
 #-----------------------------------------------------------------------------------------
 #                       verificando valores nulos ou inexistentes
     elif informacoes == "" or indice == "billing" or indice == "extra":
